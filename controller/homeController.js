@@ -23,7 +23,7 @@ $(document).ready(function () {
         "Milk",
         "Salt",
       ];
-      const data = [65, 59, 80, 81, 56, 55, 40, 20, 35, 55, 10, 70];
+      const data = [65, 59, 80, 81, 56, 50, 100, 20, 35, 55, 10, 70];
       renderChart(labels, data);
     },
   });
