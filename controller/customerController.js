@@ -1,4 +1,8 @@
-import { saveCustomer, getAllCustomers } from "../model/customerModel.js";
+import {
+  getAllCustomers,
+  saveCustomer,
+  searchCustomer,
+} from "../model/customerModel.js";
 
 $(document).ready(async function () {
   try {
@@ -26,12 +30,31 @@ $("#add-customer-btn").click(function () {
   };
 
   saveCustomer(customerData)
-    .done(function (result) {
+    .done(function () {
       swal("Confirmation!", "Customer Saved Successfully!", "success");
     })
-    .fail(function (error) {
+    .fail(function () {
       swal("Error!", "Customer Save Failed!", "error");
     });
+});
+
+$("#search-customer-btn").click(async function () {
+  const customerId = $("#customer-id").val();
+
+  if (customerId !== "") {
+    try {
+      const customerData = await searchCustomer(customerId);
+      $("#first-name").val(customerData.firstName);
+      $("#last-name").val(customerData.lastName);
+      $("#address").val(customerData.address);
+      $("#mobile").val(customerData.mobile);
+      $("#email").val(customerData.email);
+    } catch (error) {
+      console.error("Error fetching customer data:", error);
+    }
+  } else {
+    swal("Warning!", "Customer Id Required", "info");
+  }
 });
 
 function loadCustomerTable(customerList) {
@@ -65,11 +88,11 @@ function loadCustomerTable(customerList) {
 function loadCustomerId(customerIds) {
   const customerId = $("#customer-id");
   customerId.empty();
-  customerId.append('<option value="">Search,Update or Delete Customer</option>');
+  customerId.append(
+    '<option value="">Search,Update or Delete Customer</option>'
+  );
 
   customerIds.forEach(function (id) {
-    customerId.append(
-        `<option value="${id}">${id}</option>`
-    )
-  })
+    customerId.append(`<option value="${id}">${id}</option>`);
+  });
 }
