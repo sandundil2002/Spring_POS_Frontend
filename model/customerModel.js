@@ -43,3 +43,15 @@ export function updateCustomer(customerId,customer) {
     }
   });
 }
+
+export function deleteCustomer(customerId) {
+  return $.ajax({
+    url: "http://localhost:8080/Spring_POS_API/api/v1/customers/" + customerId,
+    method: "DELETE",
+    contentType: "application/json",
+
+    error: function (error) {
+      console.log(error);
+    }
+  });
+}

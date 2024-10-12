@@ -3,6 +3,7 @@ import {
   saveCustomer,
   searchCustomer,
   updateCustomer,
+  deleteCustomer,
 } from "../model/customerModel.js";
 
 $(document).ready(async function () {
@@ -76,13 +77,49 @@ $("#update-customer-btn").click(function () {
       email: email,
     };
 
-    updateCustomer(customerId, customerData)
-      .done(function () {
-        swal("Confirmation!", "Customer Update Successfully!", "success");
-      })
-      .fail(function () {
-        swal("Error!", "Customer Update Failed!", "error");
-      });
+    swal({
+      title: "Are you sure?",
+      text: "Do you want to update this customer!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        updateCustomer(customerId, customerData)
+          .done(function () {
+            swal("Confirmation!", "Customer Update Successfully!", "success");
+          })
+          .fail(function () {
+            swal("Error!", "Customer Update Failed!", "error");
+          });
+      }
+    });
+  } else {
+    swal("Warning!", "Customer Id Required", "info");
+  }
+});
+
+$("#delete-customer-btn").click(function () {
+  const customerId = $("#customer-id").val();
+
+  if (customerId !== "") {
+    swal({
+      title: "Are you sure?",
+      text: "Do you want to delete this customer!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        deleteCustomer(customerId)
+          .done(function () {
+            swal("Confirmation!", "Customer Delete Successfully!", "success");
+          })
+          .fail(function () {
+            swal("Error!", "Customer Delete Failed!", "error");
+          });
+      }
+    });
   } else {
     swal("Warning!", "Customer Id Required", "info");
   }
