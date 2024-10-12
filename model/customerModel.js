@@ -30,3 +30,16 @@ export async function searchCustomer(customerId) {
     },
   });
 }
+
+export function updateCustomer(customerId,customer) {
+  return $.ajax({
+    url: "http://localhost:8080/Spring_POS_API/api/v1/customers/" + customerId,
+    method: "PATCH",
+    contentType: "application/json",
+    data: JSON.stringify(customer),
+
+    error: function (error) {
+      console.log(error);
+    }
+  });
+}

@@ -2,6 +2,7 @@ import {
   getAllCustomers,
   saveCustomer,
   searchCustomer,
+  updateCustomer,
 } from "../model/customerModel.js";
 
 $(document).ready(async function () {
@@ -52,6 +53,36 @@ $("#search-customer-btn").click(async function () {
     } catch (error) {
       console.error("Error fetching customer data:", error);
     }
+  } else {
+    swal("Warning!", "Customer Id Required", "info");
+  }
+});
+
+$("#update-customer-btn").click(function () {
+  const customerId = $("#customer-id").val();
+
+  if (customerId !== "") {
+    const firstName = $("#first-name").val();
+    const lastName = $("#last-name").val();
+    const address = $("#address").val();
+    const mobile = $("#mobile").val();
+    const email = $("#email").val();
+
+    const customerData = {
+      firstName: firstName,
+      lastName: lastName,
+      address: address,
+      mobile: mobile,
+      email: email,
+    };
+
+    updateCustomer(customerId, customerData)
+      .done(function () {
+        swal("Confirmation!", "Customer Update Successfully!", "success");
+      })
+      .fail(function () {
+        swal("Error!", "Customer Update Failed!", "error");
+      });
   } else {
     swal("Warning!", "Customer Id Required", "info");
   }
