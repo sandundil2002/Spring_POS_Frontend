@@ -164,7 +164,7 @@ async function reloadCustomer() {
     $("#email").val("");
     const customerList = await getAllCustomers();
     loadCustomerTable(customerList);
-    loadCustomerId(customerList.map((customer) => customer.customerId));
+    loadCustomerId(customerList.map(customer => customer.customerId));
   } catch (error) {
     console.error("Error fetching customers:", error);
   }
