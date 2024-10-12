@@ -4,16 +4,11 @@ import {
   searchCustomer,
   updateCustomer,
   deleteCustomer,
+  validateCustomer,
 } from "../model/customerModel.js";
 
-$(document).ready(async function () {
-  try {
-    const customerList = await getAllCustomers();
-    loadCustomerTable(customerList);
-    loadCustomerId(customerList.map((customers) => customers.customerId));
-  } catch (error) {
-    console.error("Error fetching customers:", error);
-  }
+$(document).ready(function () {
+  reloadCustomer();
 });
 
 $("#add-customer-btn").click(function () {
@@ -31,13 +26,12 @@ $("#add-customer-btn").click(function () {
     email: email,
   };
 
-  saveCustomer(customerData)
-    .done(function () {
-      swal("Confirmation!", "Customer Saved Successfully!", "success");
-    })
-    .fail(function () {
-      swal("Error!", "Customer Save Failed!", "error");
+  if (checkValidation()) {
+    const promise = saveCustomer(customerData);
+    promise.then(() => {
+      reloadCustomer();
     });
+  }
 });
 
 $("#search-customer-btn").click(async function () {
@@ -85,13 +79,12 @@ $("#update-customer-btn").click(function () {
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
-        updateCustomer(customerId, customerData)
-          .done(function () {
-            swal("Confirmation!", "Customer Update Successfully!", "success");
-          })
-          .fail(function () {
-            swal("Error!", "Customer Update Failed!", "error");
+        if (checkValidation()) {
+          const promise = updateCustomer(customerId, customerData);
+          promise.then(() => {
+            reloadCustomer();
           });
+        }
       }
     });
   } else {
@@ -111,13 +104,10 @@ $("#delete-customer-btn").click(function () {
       dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
-        deleteCustomer(customerId)
-          .done(function () {
-            swal("Confirmation!", "Customer Delete Successfully!", "success");
-          })
-          .fail(function () {
-            swal("Error!", "Customer Delete Failed!", "error");
-          });
+        const promise = deleteCustomer(customerId);
+        promise.then(() => {
+          reloadCustomer();
+        });
       }
     });
   } else {
@@ -163,4 +153,30 @@ function loadCustomerId(customerIds) {
   customerIds.forEach(function (id) {
     customerId.append(`<option value="${id}">${id}</option>`);
   });
+}
+
+async function reloadCustomer() {
+  try {
+    $("#first-name").val("");
+    $("#last-name").val("");
+    $("#address").val("");
+    $("#mobile").val("");
+    $("#email").val("");
+    const customerList = await getAllCustomers();
+    loadCustomerTable(customerList);
+    loadCustomerId(customerList.map((customer) => customer.customerId));
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+  }
+}
+
+function checkValidation() {
+  const customer = {
+    firstName: $("#first-name").val(),
+    lastName: $("#last-name").val(),
+    address: $("#address").val(),
+    mobile: $("#mobile").val(),
+    email: $("#email").val(),
+  };
+  return validateCustomer(customer);
 }
