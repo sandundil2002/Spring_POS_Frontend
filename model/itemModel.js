@@ -1,13 +1,13 @@
 export async function getAllItems() {
-    return $.ajax({
-      url: "http://localhost:8080/Spring_POS_API/api/v1/items",
-      method: "GET",
-      dataType: "json",
+  return $.ajax({
+    url: "http://localhost:8080/Spring_POS_API/api/v1/items",
+    method: "GET",
+    dataType: "json",
 
-      error: function (error) {
-        console.log(error);
-      },
-    });  
+    error: function (error) {
+      console.log(error);
+    },
+  });
 }
 
 export function saveItem(item) {
@@ -23,6 +23,18 @@ export function saveItem(item) {
 
     error: function (error) {
       console.log(error);
+    },
+  });
+}
+
+export async function searchItem(itemCode) {
+  return $.ajax({
+    url: "http://localhost:8080/Spring_POS_API/api/v1/items/" + itemCode,
+    data: "GET",
+    dataType: "json",
+
+    error: function (error) {
+      swal("Warning!", "Item not found!", "info");
     },
   });
 }

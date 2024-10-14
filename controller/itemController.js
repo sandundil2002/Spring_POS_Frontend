@@ -1,4 +1,4 @@
-import { getAllItems, saveItem } from "../model/itemModel.js";
+import { getAllItems, saveItem, searchItem } from "../model/itemModel.js";
 
 $(document).ready(function () {
   reloadItems();
@@ -17,13 +17,28 @@ $("#add-item-btn").click(function () {
     expireDate: expireDate,
   };
 
-  console.log(itemData);
-  
-
   const promise = saveItem(itemData);
   promise.then(() => {
     reloadItems();
   });
+});
+
+$("#search-item-btn").click(async function () {
+  const itemCode = $("#item-code").val();
+
+  if (itemCode != "") {
+    try {
+      const itemData = await searchItem(itemCode);
+      $("#item-category").val(itemData.category);
+      $("#price").val(itemData.unitPrice);
+      $("#qty").val(itemData.qtyOnHand);
+      $("#ex-date").val(itemData.expireDate);
+    } catch (error) {
+      console.error("Error fetching item data:", error);
+    }
+  } else {
+    swal("Warning!", "Item Id Required", "info");
+  }
 });
 
 function loadItemTable(itemList) {
