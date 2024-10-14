@@ -55,3 +55,19 @@ export function updateItem(itemCode, item) {
     },
   });
 }
+
+export function deleteItem(itemCode) {
+  return $.ajax({
+    url: "http://localhost:8080/Spring_POS_API/api/v1/items/" + itemCode,
+    method: "DELETE",
+    contentType: "application/json",
+
+    success: function () {
+      swal("Confirmation!", "Item Delete Successfully!", "success");
+    },
+
+    error: function (error) {
+      console.log(error);
+    },
+  });
+}

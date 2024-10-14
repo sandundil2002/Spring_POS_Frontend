@@ -102,8 +102,8 @@ $("#delete-customer-btn").click(function () {
       icon: "warning",
       buttons: true,
       dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
+    }).then((willUpdate) => {
+      if (willUpdate) {
         const promise = deleteCustomer(customerId);
         promise.then(() => {
           reloadCustomer();

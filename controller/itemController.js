@@ -3,6 +3,7 @@ import {
   saveItem,
   searchItem,
   updateItem,
+  deleteItem,
 } from "../model/itemModel.js";
 
 $(document).ready(function () {
@@ -68,9 +69,32 @@ $("#update-item-btn").click(function () {
       icon: "warning",
       buttons: true,
       dangerMode: true,
+    }).then((willUpdate) => {
+      if (willUpdate) {
+        const promise = updateItem(itemCode, itemData);
+        promise.then(() => {
+          reloadItems();
+        });
+      }
+    });
+  } else {
+    swal("Warning!", "Item Id Required", "info");
+  }
+});
+
+$("#delete-item-btn").click(function () {
+  const itemCode = $("#item-code").val();
+
+  if (itemCode !== "") {
+    swal({
+      title: "Are you sure?",
+      text: "Do you want to delete this item!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
     }).then((willDelete) => {
       if (willDelete) {
-        const promise = updateItem(itemCode, itemData);
+        const promise = deleteItem(itemCode);
         promise.then(() => {
           reloadItems();
         });
