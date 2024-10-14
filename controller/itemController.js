@@ -1,4 +1,9 @@
-import { getAllItems, saveItem, searchItem } from "../model/itemModel.js";
+import {
+  getAllItems,
+  saveItem,
+  searchItem,
+  updateItem,
+} from "../model/itemModel.js";
 
 $(document).ready(function () {
   reloadItems();
@@ -36,6 +41,41 @@ $("#search-item-btn").click(async function () {
     } catch (error) {
       console.error("Error fetching item data:", error);
     }
+  } else {
+    swal("Warning!", "Item Id Required", "info");
+  }
+});
+
+$("#update-item-btn").click(function () {
+  const itemCode = $("#item-code").val();
+
+  if (itemCode != "") {
+    const category = $("#item-category").val();
+    const unitPrice = $("#price").val();
+    const qtyOnHand = $("#qty").val();
+    const expireDate = $("#ex-date").val();
+
+    const itemData = {
+      category: category,
+      unitPrice: unitPrice,
+      qtyOnHand: qtyOnHand,
+      expireDate: expireDate,
+    };
+
+    swal({
+      title: "Are you sure?",
+      text: "Do you want to update this item!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        const promise = updateItem(itemCode, itemData);
+        promise.then(() => {
+          reloadItems();
+        });
+      }
+    });
   } else {
     swal("Warning!", "Item Id Required", "info");
   }
