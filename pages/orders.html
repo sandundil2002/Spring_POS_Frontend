@@ -126,31 +126,39 @@
             </div>
         </div>
 
-        <!-- <div class="col-lg-6 col-md-12 order-bill">
-                <h2 class="text-center">Order Details</h2>
-                <div class="bill-details">
-                    <p><strong>Order Id:</strong> <span id="order-id"></span></p>
-                    <p><strong>Customer Name:</strong> <span id="customer-id"></span></p>
-                    <p><strong>Mobile:</strong> <span id="mobile"></span></p>
-                    <p><strong>Date & Time:</strong> <span id="date-time"></span></p>
+        <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="orderDetailsModalLabel">Order Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="bill-details">
+                            <p><strong>Customer Id:</strong> <span id="modal-customer-id"></span></p>
+                            <p><strong>Customer Name:</strong> <span id="modal-customer-name"></span></p>
+                            <p><strong>Mobile:</strong> <span id="modal-mobile"></span></p>
+                            <p><strong>Date & Time:</strong> <span id="modal-date-time"></span></p>
+                        </div>
+                        <div class="bill-items">
+                            <h3>Items</h3>
+                            <div id="modal-items-list"></div>
+                        </div>
+                        <div class="mb-3">
+                            <p><strong>Price & Quantity:</strong> <span id="modal-unit-price"></span></p>
+                        </div>
+                        <div class="bill-total">
+                            <p><strong>Total Amount:</strong> <span id="modal-total-amount"></span></p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-success" id="place-order-btn">Place Order</button>
+                    </div>
                 </div>
-                <div class="bill-items">
-                    <h3>Items</h3>
-                    <div id="items-list"></div>
-                </div>
-                <div class="">
-                    <p><strong>Categories:</strong> <span id="unit-price"></span></p>
-                </div>
-                <div class="">
-                    <p><strong>Price & Quantity:</strong> <span id="unit-price"></span></p>
-                </div>
-                <div class="bill-total">
-                    <p><strong>Total Amount:</strong> <span id="total-amount"></span></p>
-                </div>
-                <div class="text-center mt-4">
-                    <button id="place-order-btn" class="btn btn-success">Place Order</button>
-                </div>
-            </div> -->
+            </div>
+        </div>
     </section>
 
     <script type="module" src="../controller/orderController.js"></script>

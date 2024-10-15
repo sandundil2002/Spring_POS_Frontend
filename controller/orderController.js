@@ -1,4 +1,7 @@
-import { getAllCustomers, getAllItems } from "../model/orderModel.js";
+import {
+  getAllCustomers,
+  getAllItems,
+} from "../model/orderModel.js";
 
 $(document).ready(function () {
   loadCustomerMobiles();
@@ -85,8 +88,9 @@ function autoFillItemDetails(category) {
   }
 }
 
+const addedItems = [];
+
 $("#add-item-btn").click(function () {
-  const addedItems = [];
   const customer = $("#cus-mobile").val();
   const category = $("#item-category").val();
   const unitPrice = parseFloat($("#item-price").val());
@@ -98,14 +102,14 @@ $("#add-item-btn").click(function () {
     addedItems.push(item);
 
     $("#added-items-table tbody").append(`
-                <tr>
-                    <td>${category}</td>
-                    <td>${unitPrice.toFixed(2)}</td>
-                    <td>${qty}</td>
-                    <td>${totalPrice.toFixed(2)}</td>
-                    <td><button class="btn btn-danger btn-sm remove-item-btn">Remove</button></td>
-                </tr>
-            `);
+      <tr>
+        <td>${category}</td>
+        <td>${unitPrice.toFixed(2)}</td>
+        <td>${qty}</td>
+        <td>${totalPrice.toFixed(2)}</td>
+        <td><button class="btn btn-danger btn-sm remove-item-btn">Remove</button></td>
+      </tr>
+    `);
 
     $("#item-category").val("");
     $("#item-price").val("");
@@ -113,20 +117,48 @@ $("#add-item-btn").click(function () {
   } else {
     swal("Warning!", "Please fill all item details!", "info");
   }
+});
 
-  $(document).on("click", ".remove-item-btn", function () {
-    swal({
-      title: "Are you sure?",
-      text: "Do you want to remove this item!",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    }).then((willRemove) => {
-      if (willRemove) {
-        const rowIndex = $(this).closest("tr").index();
-        addedItems.splice(rowIndex, 1);
-        $(this).closest("tr").remove();
-      }
-    });
+$(document).on("click", ".remove-item-btn", function () {
+  swal({
+    title: "Are you sure?",
+    text: "Do you want to remove this item!",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willRemove) => {
+    if (willRemove) {
+      const rowIndex = $(this).closest("tr").index();
+      addedItems.splice(rowIndex, 1);
+      $(this).closest("tr").remove();
+    }
   });
+});
+
+$("#submit-order-btn").click(async function () {   
+  const customerId = $("#cus-id").val(); 
+  const customerName = $("#cus-name").val();
+  const customerMobile = $("#cus-mobile").val();
+  const dateTime = new Date().toLocaleString();
+
+  let itemsHtml = "";
+  let totalAmount = 0;
+  addedItems.forEach((item) => {
+    itemsHtml += `<p>${item.category} - ${item.unitPrice.toFixed(2)} x ${item.qty} = ${item.totalPrice.toFixed(2)}</p>`;
+    totalAmount += item.totalPrice;
+  });
+
+  const unitPriceAndQuantity = addedItems
+    .map((item) => `${item.unitPrice.toFixed(2)} x ${item.qty}`)
+    .join(", ");
+
+  $("#modal-customer-id").text(customerId);
+  $("#modal-customer-name").text(customerName);
+  $("#modal-mobile").text(customerMobile);
+  $("#modal-date-time").text(dateTime);
+  $("#modal-items-list").html(itemsHtml);
+  $("#modal-unit-price").text(unitPriceAndQuantity);
+  $("#modal-total-amount").text(totalAmount.toFixed(2));
+
+  $("#orderDetailsModal").modal("show");
 });
