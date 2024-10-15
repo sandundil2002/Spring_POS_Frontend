@@ -1,30 +1,17 @@
 $(document).ready(function () {
-  // Fetch data from the server if needed (optional)
   $.ajax({
-    url: "/api/sales-data", // Assume this endpoint returns the sales data
+    url: "http://localhost:8080/Spring_POS_API/api/v1/items",
     method: "GET",
+    dataType: "json",
+
     success: function (response) {
-      // You can update the chart data here using the response
-      renderChart(response.labels, response.data);
-    },
-    error: function () {
-      // Fallback data if API call fails
-      const labels = [
-        "Soap",
-        "Biscuits",
-        "Noodles",
-        "Rice",
-        "Sugar",
-        "Chicken",
-        "Ice Cream",
-        "Books",
-        "Vegetables",
-        "Eggs",
-        "Milk",
-        "Salt",
-      ];
-      const data = [65, 59, 80, 81, 56, 50, 100, 20, 35, 55, 10, 70];
+      const labels = response.map((item) => item.category);
+      const data = response.map((item) => item.qtyOnHand);
+
       renderChart(labels, data);
+    },
+    error: function (error) {
+      console.log(error);
     },
   });
 
