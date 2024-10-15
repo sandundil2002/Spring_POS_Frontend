@@ -1,6 +1,7 @@
 import {
   getAllCustomers,
   getAllItems,
+  placeOrder,
 } from "../model/orderModel.js";
 
 $(document).ready(function () {
@@ -66,7 +67,7 @@ async function loadItemCategories() {
 
     itemList.forEach(function (item) {
       itemCategory.append(
-        `<option value="${item.category}">${item.category}</option>`
+        `<option value="${item.category}" data-item-code="${item.itemCode}">${item.category}</option>`
       );
     });
 
@@ -93,12 +94,21 @@ const addedItems = [];
 $("#add-item-btn").click(function () {
   const customer = $("#cus-mobile").val();
   const category = $("#item-category").val();
+  const selectedItemCode = $("#item-category option:selected").data(
+    "item-code"
+  );
   const unitPrice = parseFloat($("#item-price").val());
   const qty = parseInt($("#item-qty").val());
 
   if (customer && category && unitPrice && qty) {
     const totalPrice = unitPrice * qty;
-    const item = { category, unitPrice, qty, totalPrice };
+    const item = {
+      itemCode: selectedItemCode,
+      category,
+      unitPrice,
+      qty,
+      totalPrice,
+    };
     addedItems.push(item);
 
     $("#added-items-table tbody").append(`
@@ -135,8 +145,8 @@ $(document).on("click", ".remove-item-btn", function () {
   });
 });
 
-$("#submit-order-btn").click(async function () {   
-  const customerId = $("#cus-id").val(); 
+$("#submit-order-btn").click(async function () {
+  const customerId = $("#cus-id").val();
   const customerName = $("#cus-name").val();
   const customerMobile = $("#cus-mobile").val();
   const dateTime = new Date().toLocaleString();
@@ -144,7 +154,9 @@ $("#submit-order-btn").click(async function () {
   let itemsHtml = "";
   let totalAmount = 0;
   addedItems.forEach((item) => {
-    itemsHtml += `<p>${item.category} - ${item.unitPrice.toFixed(2)} x ${item.qty} = ${item.totalPrice.toFixed(2)}</p>`;
+    itemsHtml += `<p>${item.category} - ${item.unitPrice.toFixed(2)} x ${
+      item.qty
+    } = ${item.totalPrice.toFixed(2)}</p>`;
     totalAmount += item.totalPrice;
   });
 
@@ -161,4 +173,28 @@ $("#submit-order-btn").click(async function () {
   $("#modal-total-amount").text(totalAmount.toFixed(2));
 
   $("#orderDetailsModal").modal("show");
+});
+
+$("#place-order-btn").click(function () {
+  const customerId = $("#cus-id").val();
+  const paymentMethod = $("#pay-method").val();
+
+  const orderDetails = addedItems.map((item) => ({
+    itemCode: item.itemCode,
+    qty: item.qty,
+    unitPrice: item.unitPrice,
+  }));
+
+  const orderData = {
+    customerId: customerId,
+    orderDetails: orderDetails,
+    paymentMethod: paymentMethod,
+  };
+
+  if (paymentMethod != "") {
+    placeOrder(orderData);
+  } else {
+    swal("Warning!", "Please fill the payment method!", "info");
+    return;
+  }
 });
