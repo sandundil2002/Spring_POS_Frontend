@@ -51,6 +51,9 @@ This frontend interacts with the Spring POS backend through the following API en
   * /api/v1/items - Fetches item list and stock levels
   * /api/v1/orders - Manages order placement and processing
 
+<h2>Backend REST API Repository</h2>
+
+  * For the backend implementation of this project, you can visit the repository <a href="https://github.com/sandundil2002/Spring_POS_API.git">Spring POS API</a>
   
 <h2>💻 Built with</h2>
 
